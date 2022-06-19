@@ -12,8 +12,8 @@
 <body>
 	<div class="container" align="center">
 		<h2 align="center">更新貨幣資料</h2>
-		<a href="#" th:href="@{/find}">上一頁</a>
-		<form class="header" action="#" th:action="@{/editCoinSave}" method="POST" th:object="${coin}">
+		<a th:href="@{/find}">上一頁</a>
+		<form class="header" th:action="@{/editCoinSave}" method="POST" th:object="${coin}">
 			<div>
 				<table>
 					<tr>
@@ -21,7 +21,7 @@
 							<label for="id">編號：</label>
 						</td>
 						<td align="right">
-							<input type="text" id="id" name="id" th:field="*{id}">
+							<input type="text" id="id" name="id" th:field="*{id}" readonly="readonly">
 						</td>
 					</tr>
 				</table>

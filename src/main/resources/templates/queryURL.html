@@ -11,13 +11,12 @@
 
 <body>
 	<div class="container">
-		<h2 align="center">貨幣資料維護</h2>
+		<h2 align="center">查詢線上貨幣資料</h2>
 	</div>
 	<div align="center">
-    	<a href="#" th:href="@{/addCoin}">新增貨幣</a>&ensp;&ensp;
-    	<a href="#" th:href="@{/findURL}">線上貨幣</a>
-	    <form th:action="@{/find}" method="GET">
-	    	<button type="submit" class="queryBtn">查詢</button>
+		<a th:href="@{/find}">上一頁</a>
+		<form th:action="@{/findURL}" method="GET">
+	    	<button type="submit" class="queryBtn">查詢URL</button>
 	    	<table style="border:1px solid #000; font-family: 微軟正黑體; font-size:16px; width:100%; border:1px solid #000; text-align:center; border-collapse:collapse;">
 				<thead>
 					<tr>
@@ -27,7 +26,6 @@
 						<th style="background-color: #009FCC; padding:10px; border:1px solid #000; color:#fff;">匯率</th>
 						<th style="background-color: #009FCC; padding:10px; border:1px solid #000; color:#fff;">說明</th>
 						<th style="background-color: #009FCC; padding:10px; border:1px solid #000; color:#fff;">利率</th>
-						<th style="background-color: #009FCC; padding:10px; border:1px solid #000; color:#fff;">建立時間</th>
 						<th style="background-color: #009FCC; padding:10px; border:1px solid #000; color:#fff;">更新時間</th>
 					</tr>
 				</thead>
@@ -35,20 +33,19 @@
 				<tbody>
 					<tr th:each="coin : ${coinList}">
 						<td style="border:1px solid #000; padding:5px;" align="center">
-							<a th:href="@{/editCoin/{id}(id=${coin.id})}">更新</a>
-							<a th:href="@{/deleteCoin/{id}(id=${coin.id})}">刪除</a>
+							<a th:href="@{/editURL/{code}/{symbol}/{rate}/{description}/{rate_float}/
+										(code=${coin.code}, symbol=${coin.symbol}, rate=${coin.rate}, description=${coin.description}, rate_float=${coin.rate_float})}">更新</a>
 						</td>
 						<td style="border:1px solid #000; padding:5px;" th:text="${coin.code}"></td>
 						<td style="border:1px solid #000; padding:5px;" th:text="${coin.symbol}"></td>
 						<td style="border:1px solid #000; padding:5px;" th:text="${coin.rate}"></td>
 						<td style="border:1px solid #000; padding:5px;" th:text="${coin.description}"></td>
 						<td style="border:1px solid #000; padding:5px;" th:text="${coin.rate_float}"></td>
-						<td style="border:1px solid #000; padding:5px;" th:text="${#dates.format(coin.create_date, 'yyyy/MM/dd HH:mm:ss')}"></td>
 						<td style="border:1px solid #000; padding:5px;" th:text="${#dates.format(coin.modify_date, 'yyyy/MM/dd HH:mm:ss')}"></td>
 					</tr>
 				</tbody>
 			</table>
-	    </form>
+		</form>
 	</div>
 </body>
 </html>

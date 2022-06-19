@@ -11,9 +11,9 @@
 
 <body>
 	<div class="container" align="center">
-		<h2 align="center">新增貨幣資料</h2>
-		<a th:href="@{/find}">上一頁</a>
-		<form class="header" th:action="@{/createCoin}" method="POST" th:object="${CoinForm}">
+		<h2 align="center">更新線上貨幣資料</h2>
+		<a th:href="@{/findURL}">上一頁</a>
+		<form class="header" th:action="@{/saveURL}" method="POST" th:object="${coin}">
 			<div>
 				<table>
 					<tr>
@@ -21,7 +21,7 @@
 							<label for="code">代號：</label>
 						</td>
 						<td align="right">
-							<input type="text" id="code" name="code" placeholder="請輸入" th:field="*{code}">
+							<input type="text" id="code" name="code" placeholder="請輸入" th:field="*{code}" readonly="readonly">
 						</td>
 					</tr>
 				</table>

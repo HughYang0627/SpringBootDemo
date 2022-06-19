@@ -15,27 +15,35 @@ public class Coin {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ID", length = 32, unique = true, nullable = false)
 	private Integer id;
 	
-	@Column // 代號
+	// 代號
+	@Column(name = "CODE", length = 10, nullable = false)
 	private String code;
 	
-	@Column // 符號
+	// 符號
+	@Column(name = "SYMBOL", length = 20)
 	private String symbol;
 	
-	@Column // 匯率
+	// 匯率
+	@Column(name = "RATE", precision = 17, scale = 4)
 	private BigDecimal rate;
 	
-	@Column // 說明
+	// 說明
+	@Column(name = "DESCRIPTION", length = 200)
 	private String description;
 	
-	@Column // 浮動利率
+	// 浮動利率
+	@Column(name = "RATE_FLOAT", precision = 17, scale = 4)
 	private BigDecimal rate_float;
 	
-	@Column // 建立日期
+	// 建立日期
+	@Column(name = "CREATE_DATE")
 	private Date create_date;
 	
-	@Column // 更新日期
+	// 更新日期
+	@Column(name = "MODIFY_DATE")
 	private Date modify_date;
 	
 }

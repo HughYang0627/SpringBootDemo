@@ -5,9 +5,13 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -110,10 +114,11 @@ public class CoinService {
 	 * @param Integer
 	 * @return Boolean
 	 */
-	public Map<String,Object> httpsDemo() throws JsonProcessingException {
+	@SuppressWarnings("unchecked")
+	public List<Coin> getCoinListByURL() throws JsonProcessingException {
 		String getUrl = "https://api.coindesk.com/v1/bpi/currentprice.json";
-		String rtnHttps = "";
 		Map<String, Object> result = new HashMap<String,Object>();
+		List<Coin> coinList = new ArrayList<Coin>();
 		
 		try {
 			URL url = new URL(getUrl);
@@ -132,12 +137,135 @@ public class CoinService {
 				bufferedReader.close();
 				httpsURLConnection.disconnect();
 				result = new ObjectMapper().readValue(stringBuffer.toString(), HashMap.class);
-				rtnHttps = stringBuffer.toString();
+				
+				Map<String, Object> bpiMap = new HashMap<String, Object>();
+				bpiMap = result.get("bpi") != null ? (Map<String, Object>) result.get("bpi") : null;
+				
+				Set<Entry<String, Object>> setEntry = null;
+				for (Map.Entry<String, Object> entryCoin : bpiMap.entrySet()) {
+					System.out.println("Key = " + entryCoin.getKey() + ", Value = " + entryCoin.getValue());
+					setEntry = bpiMap.entrySet();
+				}
+				Map<String, Object> coinMapTemp = new HashMap<String, Object>();
+				Map<String, Object> coinMap = new HashMap<String, Object>();
+				for (Entry<String, Object> entry : setEntry) {
+					coinMapTemp.put(entry.getKey(), entry.getValue());
+					coinMap = coinMapTemp.get(entry.getKey()) != null ? (Map<String, Object>) coinMapTemp.get(entry.getKey()) : null;
+					Coin coin = new Coin();
+					if (coinMap != null) {
+						// 代號
+						String code = coinMap.get("code") != null ? coinMap.get("code").toString() : null;
+						coin.setCode(code);
+						
+						// 符號
+						String symbol = coinMap.get("symbol") != null ? coinMap.get("symbol").toString() : null;
+						coin.setSymbol(symbol);
+						
+						// 匯率
+						String rateStr = coinMap.get("rate") != null ? coinMap.get("rate").toString().replace(",", "") : "0";
+						BigDecimal rate = new BigDecimal(rateStr);
+						coin.setRate(rate);
+						
+						// 說明
+						String description = coinMap.get("description") != null ? coinMap.get("description").toString() : null;
+						coin.setDescription(description);
+						
+						// 利率
+						String rate_floatStr = coinMap.get("rate_float") != null ? coinMap.get("rate_float").toString().replace(",", "") : "0";
+						BigDecimal rate_float = new BigDecimal(rate_floatStr);
+						coin.setRate_float(rate_float);
+						coinList.add(coin);
+					}
+				}
 			}
 		} catch (Exception e) {
 			// TODO
 		}
-		return result ;
+		return coinList;
+	}
+	
+	/**
+	 * 查詢(URL)
+	 * @param Integer
+	 * @return Boolean
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Coin> editURL(Coin coin) throws JsonProcessingException {
+		String getUrl = "https://api.coindesk.com/v1/bpi/currentprice.json";
+		Map<String, Object> result = new HashMap<String,Object>();
+		List<Coin> coinList = new ArrayList<Coin>();
+		
+		try {
+			URL url = new URL(getUrl);
+			HttpsURLConnection httpsURLConnection = (HttpsURLConnection) url.openConnection();
+			httpsURLConnection.connect();
+			
+			if (httpsURLConnection.getResponseCode() == 200) {
+				InputStream inputStream = httpsURLConnection.getInputStream();
+				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+				StringBuffer stringBuffer = new StringBuffer();
+				String readLine = "";
+				while ((readLine = bufferedReader.readLine()) != null) {
+					stringBuffer.append(readLine);
+				}
+				inputStream.close();
+				bufferedReader.close();
+				httpsURLConnection.disconnect();
+				result = new ObjectMapper().readValue(stringBuffer.toString(), HashMap.class);
+				
+				Map<String, Object> bpiMap = new HashMap<String, Object>();
+				bpiMap = result.get("bpi") != null ? (Map<String, Object>) result.get("bpi") : null;
+				
+				Set<Entry<String, Object>> setEntry = null;
+				for (Map.Entry<String, Object> entryCoin : bpiMap.entrySet()) {
+					System.out.println("Key = " + entryCoin.getKey() + ", Value = " + entryCoin.getValue());
+					setEntry = bpiMap.entrySet();
+				}
+				Map<String, Object> coinMapTemp = new HashMap<String, Object>();
+				Map<String, Object> coinMap = new HashMap<String, Object>();
+				for (Entry<String, Object> entry : setEntry) {
+					coinMapTemp.put(entry.getKey(), entry.getValue());
+					coinMap = coinMapTemp.get(entry.getKey()) != null ? (Map<String, Object>) coinMapTemp.get(entry.getKey()) : null;
+					Coin coinVO = new Coin();
+					if (coinMap != null) {
+						// 代號
+						String code = coinMap.get("code") != null ? coinMap.get("code").toString() : null;
+						coinVO.setCode(code);
+						
+						// 符號
+						String symbol = coinMap.get("symbol") != null ? coinMap.get("symbol").toString() : null;
+						coinVO.setSymbol(symbol);
+						
+						// 匯率
+						String rateStr = coinMap.get("rate") != null ? coinMap.get("rate").toString().replace(",", "") : "0";
+						BigDecimal rate = new BigDecimal(rateStr);
+						coinVO.setRate(rate);
+						
+						// 說明
+						String description = coinMap.get("description") != null ? coinMap.get("description").toString() : null;
+						coinVO.setDescription(description);
+						
+						// 利率
+						String rate_floatStr = coinMap.get("rate_float") != null ? coinMap.get("rate_float").toString().replace(",", "") : "0";
+						BigDecimal rate_float = new BigDecimal(rate_floatStr);
+						coinVO.setRate_float(rate_float);
+					}
+					
+					if (coinVO.getCode().equals(coin.getCode())) {
+						coinVO.setCode(coin.getCode());
+						coinVO.setSymbol(coin.getSymbol());
+						coinVO.setRate(coin.getRate());
+						coinVO.setDescription(coin.getDescription());
+						coinVO.setRate_float(coin.getRate_float());
+						coinVO.setModify_date(new Date());
+						coinList.add(coinVO);
+					}
+				}
+			}
+		} catch (Exception e) {
+			// TODO
+		}
+		return coinList;
 	}
 	
 }
